@@ -6,14 +6,20 @@ using System.Threading.Tasks;
 using DatingApp.API.Data;
 using DatingApp.API.Dtos;
 using DatingApp.API.Models;
+<<<<<<< HEAD
 using Microsoft.AspNetCore.Authorization;
+=======
+>>>>>>> 845b71919f740036a8ba540bffc57866b6ad8111
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DatingApp.API.Controllers
 {
+<<<<<<< HEAD
     
+=======
+>>>>>>> 845b71919f740036a8ba540bffc57866b6ad8111
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -60,7 +66,11 @@ namespace DatingApp.API.Controllers
                   new Claim(ClaimTypes.Name,userfromrepo.Username)
                };
 
+<<<<<<< HEAD
             var      = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+=======
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+>>>>>>> 845b71919f740036a8ba540bffc57866b6ad8111
 
             var creds=new SigningCredentials(key,SecurityAlgorithms.HmacSha512Signature);
 
@@ -78,6 +88,13 @@ namespace DatingApp.API.Controllers
             return Ok(new {
                 token=tokenHandler.WriteToken(token)
             });
+<<<<<<< HEAD
         }
+=======
+
+
+        }
+
+>>>>>>> 845b71919f740036a8ba540bffc57866b6ad8111
     }
 }
