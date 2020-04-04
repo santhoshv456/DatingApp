@@ -1,5 +1,5 @@
 import { BrowserModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, Component } from '@angular/core';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
@@ -24,6 +24,9 @@ import { MembersCardComponent } from './members/members-card/members-card.compon
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { MemberDeatilResolver } from './_resolvers/member-detail.resolver';
 import { MemberListResolver } from './_resolvers/memberList.resolver';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { MemberEditResolver } from './_resolvers/member-edit.resolver';
+import { PreventUnsavedChanges } from './_guards/PreventUnsavedChanges';
 
 
 export function tokenGetter() {
@@ -49,7 +52,8 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       ListsComponent,
       MessagesComponent,
       MembersCardComponent,
-      MemberDetailComponent
+      MemberDetailComponent,
+      MemberEditComponent
    ],
    imports: [
       BrowserModule,
@@ -75,6 +79,8 @@ export class CustomHammerConfig extends HammerGestureConfig  {
             children: [
                { path: 'members', component: MemberListComponent, resolve: { users: MemberListResolver} },
                { path: 'members/:id', component: MemberDetailComponent, resolve: {user: MemberDeatilResolver} },
+               { path: 'member/edit', component: MemberEditComponent,
+                     resolve: {user: MemberEditResolver}, canDeactivate: [PreventUnsavedChanges]},
                { path: 'messages', component: MessagesComponent },
                { path: 'lists', component: ListsComponent }]
          },
@@ -86,7 +92,9 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       ErrorInterceptorProvider,
       MemberDeatilResolver,
       MemberListResolver,
-      { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig }
+      { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig },
+      MemberEditResolver,
+      PreventUnsavedChanges
    ],
    bootstrap: [
       AppComponent
