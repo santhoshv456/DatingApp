@@ -32,6 +32,7 @@ import { FileUploadModule } from 'ng2-file-upload';
 import {TimeAgoPipe} from 'time-ago-pipe';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { MemberLikesResolver } from './_resolvers/member-likes.resolver';
 
 
 
@@ -95,7 +96,7 @@ export class CustomHammerConfig extends HammerGestureConfig  {
                { path: 'member/edit', component: MemberEditComponent,
                      resolve: {user: MemberEditResolver}, canDeactivate: [PreventUnsavedChanges]},
                { path: 'messages', component: MessagesComponent },
-               { path: 'lists', component: ListsComponent }]
+               { path: 'lists', component: ListsComponent , resolve: {users: MemberLikesResolver} }]
          },
          { path: '**', redirectTo: '', pathMatch: 'full' }
       ])
@@ -107,7 +108,8 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       MemberListResolver,
       { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig },
       MemberEditResolver,
-      PreventUnsavedChanges
+      PreventUnsavedChanges,
+      MemberLikesResolver
    ],
    bootstrap: [
       AppComponent
