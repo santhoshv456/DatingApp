@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { User } from '../_models/user';
 import { PaginationResult } from '../_models/Pagination';
 import { map } from 'rxjs/operators';
+import { Message } from '../_models/Messages';
 
 @Injectable({
   providedIn: 'root'
@@ -26,10 +27,10 @@ export class UserService {
     }
 
     if (userParms != null) {
-       params = params.append('minAge', userParms.minAge );
-       params = params.append('maxAge', userParms.maxAge );
-       params = params.append('gender', userParms.gender );
-       params = params.append('orderBy', userParms.orderBy);
+      params = params.append('minAge', userParms.minAge);
+      params = params.append('maxAge', userParms.maxAge);
+      params = params.append('gender', userParms.gender);
+      params = params.append('orderBy', userParms.orderBy);
     }
 
 
@@ -42,15 +43,15 @@ export class UserService {
     }
 
 
-    return this.http.get<User[]>(this.baseUrl + 'users', { observe: 'response', params})
-    .pipe(map(response => {
-      paginationResult.result = response.body;
-      if (response.headers.get('Pagination') != null) {
-         paginationResult.pagination = JSON.parse(response.headers.get('Pagination'));
-      }
-      return paginationResult;
-    })
-    );
+    return this.http.get<User[]>(this.baseUrl + 'users', { observe: 'response', params })
+      .pipe(map(response => {
+        paginationResult.result = response.body;
+        if (response.headers.get('Pagination') != null) {
+          paginationResult.pagination = JSON.parse(response.headers.get('Pagination'));
+        }
+        return paginationResult;
+      })
+      );
   }
 
   getUser(id): Observable<User> {
@@ -62,15 +63,54 @@ export class UserService {
   }
 
   setMainPhoto(userid: number, id: number) {
-       return this.http.post(this.baseUrl + 'users/' + userid + '/photos/' + id + '/setMain', {});
+    return this.http.post(this.baseUrl + 'users/' + userid + '/photos/' + id + '/setMain', {});
   }
 
   deletePhoto(userid: number, id: number) {
-       return this.http.delete(this.baseUrl + 'users/' + userid + '/photos/' + id);
+    return this.http.delete(this.baseUrl + 'users/' + userid + '/photos/' + id);
   }
 
   sendLike(id: number, recipentId: number) {
-       return this.http.post(this.baseUrl + 'users/' + id + '/like/' + recipentId, {});
+    return this.http.post(this.baseUrl + 'users/' + id + '/like/' + recipentId, {});
+  }
+
+  getMessages(id: number, page?, itemsPerPage?, messageContainer?) {
+    const paginatedResult: PaginationResult<Message[]> = new PaginationResult<Message[]>();
+
+    let params = new HttpParams();
+
+    params = params.append('MessageContainer', messageContainer);
+
+    if (page != null && itemsPerPage != null) {
+      params = params.append('pageNumber', page);
+      params = params.append('pageSize', itemsPerPage);
+    }
+
+    return this.http.get<Message[]>(this.baseUrl + 'users/' + id + '/messages', { observe: 'response', params })
+      .pipe(map(respose => {
+        paginatedResult.result = respose.body;
+        if (respose.headers.get('Pagination') != null) {
+          paginatedResult.pagination = JSON.parse(respose.headers.get('Pagination'));
+        }
+        return paginatedResult;
+      }));
+  }
+
+  getMessageThread(id: number , recipentId: number) {
+     return this.http.get<Message[]>(this.baseUrl + 'users/' + id + '/messages/thread/' + recipentId);
+  }
+
+  sendMessage(id: number, message: Message) {
+     return this.http.post(this.baseUrl + 'users/' + id + '/messages', message);
+  }
+
+  deleteMessage(id: number , userId: number) {
+    return this.http.post(this.baseUrl + 'users/' + userId + '/messages/' + id, {});
+  }
+
+  markAsRead(userId: number, messageId: number) {
+    return this.http.post(this.baseUrl + 'users/' + userId + '/messages/' + messageId + '/read', {})
+    .subscribe();
   }
 
 }

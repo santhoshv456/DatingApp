@@ -35,8 +35,8 @@ likesParam: string;
   loadUsers() {
     this.userService.getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, null , this.likesParam)
     .subscribe((data: PaginationResult<User[]>)  => {
-        this.users = data.result;
-        this.pagination = data.pagination;
+      this.users = data.result;
+      this.pagination = data.pagination;
     }, error => {
        this.alertify.error(error);
     });

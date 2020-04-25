@@ -2,6 +2,8 @@ import * as core from '@angular/core';
 import { User } from 'src/app/_models/user';
 import { ActivatedRoute } from '@angular/router';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
+import { ViewChild } from '@angular/core';
+import { TabsetComponent } from 'ngx-bootstrap';
 
 @core.Component({
   selector: 'app-member-detail',
@@ -9,18 +11,24 @@ import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gal
   styleUrls: ['./member-detail.component.css']
 })
 export class MemberDetailComponent implements core.OnInit {
+  @ViewChild('staticTabs', { static: true }) staticTabs: TabsetComponent;
 
   user: User;
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute) {
+  }
 
   ngOnInit() {
     this.route.data.subscribe(data => {
         this.user = data.user;
     });
 
+    this.route.queryParams.subscribe(params => {
+      const tab = params.tab;
+      this.staticTabs.tabs[tab > 0 ? tab : 0].active = true;
+    });
 
     this.galleryOptions = [
       {
@@ -46,6 +54,10 @@ export class MemberDetailComponent implements core.OnInit {
          });
      }
     return imageUrls;
+  }
+
+  selectTab(tabId: number) {
+    this.staticTabs.tabs[tabId].active = true;
   }
 
 }

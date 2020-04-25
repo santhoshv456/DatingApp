@@ -33,6 +33,8 @@ import {TimeAgoPipe} from 'time-ago-pipe';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { MemberLikesResolver } from './_resolvers/member-likes.resolver';
+import { MessagesResolver } from './_resolvers/messages.resolver';
+import { MemberMessageComponent } from './members/member-message/member-message.component';
 
 
 
@@ -62,7 +64,8 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       MemberDetailComponent,
       MemberEditComponent,
       PhotoEditorComponent,
-      TimeAgoPipe
+      TimeAgoPipe,
+      MemberMessageComponent
    ],
    imports: [
       BrowserModule,
@@ -95,7 +98,7 @@ export class CustomHammerConfig extends HammerGestureConfig  {
                { path: 'members/:id', component: MemberDetailComponent, resolve: {user: MemberDeatilResolver} },
                { path: 'member/edit', component: MemberEditComponent,
                      resolve: {user: MemberEditResolver}, canDeactivate: [PreventUnsavedChanges]},
-               { path: 'messages', component: MessagesComponent },
+               { path: 'messages', component: MessagesComponent, resolve: {messages: MessagesResolver} },
                { path: 'lists', component: ListsComponent , resolve: {users: MemberLikesResolver} }]
          },
          { path: '**', redirectTo: '', pathMatch: 'full' }
@@ -109,7 +112,8 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig },
       MemberEditResolver,
       PreventUnsavedChanges,
-      MemberLikesResolver
+      MemberLikesResolver,
+      MessagesResolver
    ],
    bootstrap: [
       AppComponent
