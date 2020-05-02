@@ -20,4 +20,16 @@ editRoles(user: User, roles: {}) {
    return this.http.post(this.baseUrl + 'admin/editRole/' + user.userName , roles);
 }
 
+getPhotosForApproval() {
+  return this.http.get(this.baseUrl + 'admin/photosForModeration');
+}
+
+approvePhoto(photoId: number) {
+  return this.http.post(this.baseUrl + 'admin/approvePhoto/' + photoId , {});
+}
+
+rejectPhoto(photoId: number) {
+  return this.http.post(this.baseUrl + 'admin/rejectPhoto/' + photoId , {});
+}
+
 }
