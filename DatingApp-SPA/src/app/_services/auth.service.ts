@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import {BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
@@ -24,12 +24,12 @@ export class AuthService {
 
   decodedToken: any;
 
-  baseUrl =  environment.apiUrl + 'auth/';
+  baseUrl = environment.apiUrl + 'auth/';
 
   constructor(private http: HttpClient) { }
 
   changeMainPhotoUrl(photoUrl: string) {
-     this.photoUrl.next(photoUrl);
+    this.photoUrl.next(photoUrl);
   }
 
   login(model: any) {
@@ -48,13 +48,28 @@ export class AuthService {
   }
 
 
-  loggedIn(){
+  loggedIn() {
     const token = localStorage.getItem('token');
     return !this.helper.isTokenExpired(token);
   }
 
-register(user: User) {
-  return this.http.post(this.baseUrl + 'register', user);
-}
+  register(user: User) {
+    return this.http.post(this.baseUrl + 'register', user);
+  }
+  isMatch(allowedRoles): boolean {
+      let isMatch = false;
+
+      const roles = this.decodedToken.role as Array<string>;
+
+      allowedRoles.forEach(element => {
+           if (roles.includes(element)) {
+            isMatch = true;
+            return;
+           }
+
+      });
+
+      return isMatch;
+  }
 
 }

@@ -35,6 +35,14 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { MemberLikesResolver } from './_resolvers/member-likes.resolver';
 import { MessagesResolver } from './_resolvers/messages.resolver';
 import { MemberMessageComponent } from './members/member-message/member-message.component';
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { HasRoleDirective } from './_directives/HasRole.directive';
+import { UserManagementComponent } from './admin/user-management/user-management.component';
+import { PhotoManagementComponent } from './admin/photo-management/photo-management.component';
+import { AdminService } from './_services/admin.service';
+import { ModalModule } from 'ngx-bootstrap';
+import { RolesModalComponent } from './admin/roles-modal/roles-modal.component';
+
 
 
 
@@ -65,7 +73,12 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       MemberEditComponent,
       PhotoEditorComponent,
       TimeAgoPipe,
-      MemberMessageComponent
+      MemberMessageComponent,
+      AdminPanelComponent,
+      HasRoleDirective,
+      UserManagementComponent,
+      PhotoManagementComponent,
+      RolesModalComponent
    ],
    imports: [
       BrowserModule,
@@ -75,6 +88,7 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       BrowserAnimationsModule,
       PaginationModule.forRoot(),
       ButtonsModule.forRoot(),
+      ModalModule.forRoot(),
       FileUploadModule,
       NgxGalleryModule,
       BsDropdownModule.forRoot(),
@@ -94,6 +108,7 @@ export class CustomHammerConfig extends HammerGestureConfig  {
             runGuardsAndResolvers: 'always',
             canActivate: [AuthGuard],
             children: [
+               { path: 'admin' , component: AdminPanelComponent, data: { roles: ['Admin', 'Moderator']} },
                { path: 'members', component: MemberListComponent, resolve: { users: MemberListResolver} },
                { path: 'members/:id', component: MemberDetailComponent, resolve: {user: MemberDeatilResolver} },
                { path: 'member/edit', component: MemberEditComponent,
@@ -113,7 +128,11 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       MemberEditResolver,
       PreventUnsavedChanges,
       MemberLikesResolver,
-      MessagesResolver
+      MessagesResolver,
+      AdminService
+   ],
+   entryComponents: [
+      RolesModalComponent
    ],
    bootstrap: [
       AppComponent
